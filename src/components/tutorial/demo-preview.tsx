@@ -1,21 +1,13 @@
 "use client";
 
-import { Suspense, lazy, useMemo, useState } from "react";
-import { ExternalLink, Maximize2, RotateCcw } from "lucide-react";
+import { useState } from "react";
+import { Maximize2, RotateCcw } from "lucide-react";
 import Link from "next/link";
 import { demoRegistry } from "@/lib/registry";
 
 interface DemoPreviewProps {
   slug: string;
   height?: string;
-}
-
-function DemoSkeleton() {
-  return (
-    <div className="flex items-center justify-center h-full bg-muted animate-pulse">
-      <div className="text-muted-foreground">Loading demo...</div>
-    </div>
-  );
 }
 
 function DemoError({ slug }: { slug: string }) {
@@ -31,14 +23,9 @@ function DemoError({ slug }: { slug: string }) {
 
 export function DemoPreview({ slug, height = "400px" }: DemoPreviewProps) {
   const [key, setKey] = useState(0);
+  const hasDemo = slug in demoRegistry;
 
-  const DemoComponent = useMemo(() => {
-    const loader = demoRegistry[slug];
-    if (!loader) return null;
-    return lazy(loader);
-  }, [slug]);
-
-  if (!DemoComponent) {
+  if (!hasDemo) {
     return (
       <div className="overflow-hidden rounded-xl border border-border" style={{ height }}>
         <DemoError slug={slug} />
@@ -69,12 +56,13 @@ export function DemoPreview({ slug, height = "400px" }: DemoPreviewProps) {
         </div>
       </div>
 
-      {/* Demo */}
-      <div style={{ height }} className="overflow-auto relative">
-        <Suspense fallback={<DemoSkeleton />}>
-          <DemoComponent key={key} />
-        </Suspense>
-      </div>
+      {/* Demo - use iframe to isolate scroll */}
+      <iframe
+        key={key}
+        src={`/demos/${slug}`}
+        style={{ height, width: "100%", border: "none" }}
+        title={`Demo: ${slug}`}
+      />
 
       {/* Hint for scroll demos */}
       <div className="border-t border-border bg-muted/30 px-3 py-2 text-center">
