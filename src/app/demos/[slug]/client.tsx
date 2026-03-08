@@ -27,11 +27,12 @@ function DemoError({ slug }: { slug: string }) {
 export default function DemoClient({ slug }: { slug: string }) {
   const router = useRouter();
   const [key, setKey] = useState(0);
-  const [isInIframe, setIsInIframe] = useState(false);
+  const [showHeader, setShowHeader] = useState(false);
 
   useEffect(() => {
-    // Detect if running inside an iframe
-    setIsInIframe(window.self !== window.top);
+    // Only show header if NOT in iframe
+    const inIframe = window.self !== window.top;
+    setShowHeader(!inIframe);
   }, []);
 
   const title = slug
@@ -51,8 +52,8 @@ export default function DemoClient({ slug }: { slug: string }) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Compact Floating Header - hidden when in iframe preview */}
-      {!isInIframe && (
+      {/* Compact Floating Header - hidden in iframe preview */}
+      {showHeader && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-lg border border-border bg-background/80 backdrop-blur px-2 py-1.5">
           <button
             onClick={() => router.back()}
