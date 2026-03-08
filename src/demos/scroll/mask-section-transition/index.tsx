@@ -12,9 +12,11 @@ const images = [
 ];
 
 export default function MaskSectionTransition() {
-  // Initialize Lenis smooth scroll
   useEffect(() => {
-    const lenis = new Lenis();
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    });
 
     function raf(time: number) {
       lenis.raf(time);
@@ -42,12 +44,10 @@ export default function MaskSectionTransition() {
 function useDimension() {
   const [dimension, setDimension] = useState({ width: 0, height: 0 });
 
-  const updateDimension = () => {
-    const { innerWidth, innerHeight } = window;
-    setDimension({ width: innerWidth, height: innerHeight });
-  };
-
   useEffect(() => {
+    const updateDimension = () => {
+      setDimension({ width: window.innerWidth, height: window.innerHeight });
+    };
     updateDimension();
     window.addEventListener("resize", updateDimension);
     return () => window.removeEventListener("resize", updateDimension);
@@ -82,15 +82,17 @@ interface SectionProps {
 
 function Section({ src, progress, range }: SectionProps) {
   const { width, height } = useDimension();
+  const diagonal = Math.sqrt(width * width + height * height);
 
-  const maskSize = useTransform(progress, range, [0, 1.25 * width + 1.25 * height]);
+  // Mask needs to be large enough to cover corners (star shape needs extra size)
+  const maskSize = useTransform(progress, range, [0, diagonal * 2.5]);
   const maskSizePixels = useMotionTemplate`${maskSize}px`;
 
   return (
     <div className={styles.section}>
       <motion.div
         className={styles.imageContainer}
-        style={{ WebkitMaskSize: maskSizePixels }}
+        style={{ WebkitMaskSize: maskSizePixels, maskSize: maskSizePixels }}
       >
         <img src={src} alt="section" className={styles.image} />
       </motion.div>
@@ -113,9 +115,11 @@ const images = [
 ];
 
 export default function MaskSectionTransition() {
-  // Initialize Lenis for smooth scrolling
   useEffect(() => {
-    const lenis = new Lenis();
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    });
 
     function raf(time: number) {
       lenis.raf(time);
@@ -123,7 +127,6 @@ export default function MaskSectionTransition() {
     }
 
     requestAnimationFrame(raf);
-
     return () => lenis.destroy();
   }, []);
 
@@ -173,16 +176,17 @@ function MaskSections() {
 
 function Section({ src, progress, range }) {
   const { width, height } = useDimension();
+  const diagonal = Math.sqrt(width * width + height * height);
 
-  // Mask grows from 0 to 125% of viewport diagonal
-  const maskSize = useTransform(progress, range, [0, 1.25 * width + 1.25 * height]);
+  // Mask needs to be large enough to cover corners (star shape needs extra size)
+  const maskSize = useTransform(progress, range, [0, diagonal * 2.5]);
   const maskSizePixels = useMotionTemplate\`\${maskSize}px\`;
 
   return (
     <div className={styles.section}>
       <motion.div
         className={styles.imageContainer}
-        style={{ WebkitMaskSize: maskSizePixels }}
+        style={{ WebkitMaskSize: maskSizePixels, maskSize: maskSizePixels }}
       >
         <img src={src} alt="section" className={styles.image} />
       </motion.div>
@@ -198,8 +202,9 @@ function Section({ src, progress, range }) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #666;
+  color: #444;
   font-size: 1.5rem;
+  font-weight: 300;
 }
 
 .container {
@@ -224,9 +229,13 @@ function Section({ src, progress, range }) {
 .imageContainer {
   width: 100%;
   height: 100%;
-  -webkit-mask-image: url("data:image/svg+xml,...");
+  /* 4-pointed star mask - creates smooth inward reveal */
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 0 Q55 45 100 50 Q55 55 50 100 Q45 55 0 50 Q45 45 50 0Z' fill='black'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 0 Q55 45 100 50 Q55 55 50 100 Q45 55 0 50 Q45 45 50 0Z' fill='black'/%3E%3C/svg%3E");
   -webkit-mask-position: center;
+  mask-position: center;
   -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
 }
 
 .image {
