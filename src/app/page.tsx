@@ -1,7 +1,16 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight, Github, ExternalLink } from "lucide-react";
 
 export default function Home() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -26,12 +35,9 @@ export default function Home() {
               <Link
                 href="/tutorials"
                 className="inline-flex items-center gap-2 rounded-lg bg-foreground px-6 py-3 text-sm font-medium text-background transition-colors hover:bg-foreground/90"
-                suppressHydrationWarning
               >
                 Browse Gallery
-                <span suppressHydrationWarning>
-                  <ArrowRight className="h-4 w-4" />
-                </span>
+                {mounted && <ArrowRight className="h-4 w-4" />}
               </Link>
 
               <a
@@ -39,15 +45,10 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-lg border border-border px-6 py-3 text-sm font-medium transition-colors hover:bg-muted"
-                suppressHydrationWarning
               >
-                <span suppressHydrationWarning>
-                  <Github className="h-4 w-4" />
-                </span>
+                {mounted && <Github className="h-4 w-4" />}
                 GitHub
-                <span suppressHydrationWarning>
-                  <ExternalLink className="h-3 w-3" />
-                </span>
+                {mounted && <ExternalLink className="h-3 w-3" />}
               </a>
             </div>
           </div>

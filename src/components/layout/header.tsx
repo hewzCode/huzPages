@@ -1,9 +1,16 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Github } from "lucide-react";
 
 export function Header() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-14 items-center px-4 md:px-6">
@@ -24,11 +31,8 @@ export function Header() {
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted-foreground hover:text-foreground transition-colors"
-            suppressHydrationWarning
           >
-            <span suppressHydrationWarning>
-              <Github className="h-5 w-5" />
-            </span>
+            {mounted && <Github className="h-5 w-5" />}
           </a>
         </nav>
       </div>
