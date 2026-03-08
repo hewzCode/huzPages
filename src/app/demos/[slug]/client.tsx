@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, lazy, useMemo, useState, useEffect } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, RotateCcw } from "lucide-react";
 import { demoRegistry } from "@/lib/registry";
 
@@ -25,6 +25,7 @@ function DemoError({ slug }: { slug: string }) {
 }
 
 export default function DemoClient({ slug }: { slug: string }) {
+  const router = useRouter();
   const [key, setKey] = useState(0);
   const [isInIframe, setIsInIframe] = useState(false);
 
@@ -53,8 +54,8 @@ export default function DemoClient({ slug }: { slug: string }) {
       {/* Compact Floating Header - hidden when in iframe preview */}
       {!isInIframe && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-lg border border-border bg-background/80 backdrop-blur px-2 py-1.5">
-          <Link
-            href="/tutorials"
+          <button
+            onClick={() => router.back()}
             className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
             suppressHydrationWarning
           >
@@ -62,7 +63,7 @@ export default function DemoClient({ slug }: { slug: string }) {
               <ArrowLeft className="h-4 w-4" />
             </span>
             Back
-          </Link>
+          </button>
 
           <div className="h-4 w-px bg-border" />
 
@@ -74,8 +75,12 @@ export default function DemoClient({ slug }: { slug: string }) {
 
           <button
             onClick={() => {
-              window.scrollTo(0, 0);
-              setKey((prev) => prev + 1);
+              // Force scroll reset on all elements
+              window.scrollTo({ top: 0, behavior: "instant" });
+              document.documentElement.scrollTop = 0;
+              document.body.scrollTop = 0;
+              // Small delay to ensure scroll resets before remount
+              setTimeout(() => setKey((prev) => prev + 1), 10);
             }}
             className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
             suppressHydrationWarning
