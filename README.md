@@ -1,6 +1,6 @@
 # HuzNotes - Creative Web Effects
 
-A personal site to document creative web effects, animations, and UI experiments. Inspired by [Olivier Larose's blog](https://blog.olivierlarose.com/).
+A personal site to document creative web effects, animations, and UI experiments.
 
 ## Quick Start
 

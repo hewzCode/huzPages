@@ -21,7 +21,7 @@ function DemoError({ slug }: { slug: string }) {
   );
 }
 
-const BASE_PATH = "/huzPages";
+const BASE_PATH = process.env.NODE_ENV === "production" ? "/huzPages" : "";
 
 export function DemoPreview({ slug, height = "400px" }: DemoPreviewProps) {
   const [key, setKey] = useState(0);
