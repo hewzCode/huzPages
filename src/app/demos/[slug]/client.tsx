@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, lazy, useMemo, useState } from "react";
+import { Suspense, lazy, useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowLeft, RotateCcw } from "lucide-react";
 import { demoRegistry } from "@/lib/registry";
@@ -26,6 +26,12 @@ function DemoError({ slug }: { slug: string }) {
 
 export default function DemoClient({ slug }: { slug: string }) {
   const [key, setKey] = useState(0);
+  const [isInIframe, setIsInIframe] = useState(false);
+
+  useEffect(() => {
+    // Detect if running inside an iframe
+    setIsInIframe(window.self !== window.top);
+  }, []);
 
   const title = slug
     .split("-")
@@ -44,38 +50,43 @@ export default function DemoClient({ slug }: { slug: string }) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Compact Floating Header */}
-      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-lg border border-border bg-background/80 backdrop-blur px-2 py-1.5">
-        <Link
-          href="/tutorials"
-          className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-          suppressHydrationWarning
-        >
-          <span suppressHydrationWarning>
-            <ArrowLeft className="h-4 w-4" />
+      {/* Compact Floating Header - hidden when in iframe preview */}
+      {!isInIframe && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-lg border border-border bg-background/80 backdrop-blur px-2 py-1.5">
+          <Link
+            href="/tutorials"
+            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+            suppressHydrationWarning
+          >
+            <span suppressHydrationWarning>
+              <ArrowLeft className="h-4 w-4" />
+            </span>
+            Back
+          </Link>
+
+          <div className="h-4 w-px bg-border" />
+
+          <span className="text-sm font-medium px-2">
+            {title}
           </span>
-          Back
-        </Link>
 
-        <div className="h-4 w-px bg-border" />
+          <div className="h-4 w-px bg-border" />
 
-        <span className="text-sm font-medium px-2">
-          {title}
-        </span>
-
-        <div className="h-4 w-px bg-border" />
-
-        <button
-          onClick={() => setKey((prev) => prev + 1)}
-          className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-          suppressHydrationWarning
-        >
-          <span suppressHydrationWarning>
-            <RotateCcw className="h-4 w-4" />
-          </span>
-          Reset
-        </button>
-      </div>
+          <button
+            onClick={() => {
+              window.scrollTo(0, 0);
+              setKey((prev) => prev + 1);
+            }}
+            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+            suppressHydrationWarning
+          >
+            <span suppressHydrationWarning>
+              <RotateCcw className="h-4 w-4" />
+            </span>
+            Reset
+          </button>
+        </div>
+      )}
 
       {/* Demo */}
       <Suspense fallback={<DemoSkeleton />}>
