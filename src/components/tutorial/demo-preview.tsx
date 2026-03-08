@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Maximize2, RotateCcw } from "lucide-react";
 import Link from "next/link";
 import { demoRegistry } from "@/lib/registry";
@@ -23,7 +23,16 @@ function DemoError({ slug }: { slug: string }) {
 
 export function DemoPreview({ slug, height = "400px" }: DemoPreviewProps) {
   const [key, setKey] = useState(0);
+  const [basePath, setBasePath] = useState("");
   const hasDemo = slug in demoRegistry;
+
+  useEffect(() => {
+    // Detect basePath from current URL
+    const path = window.location.pathname;
+    if (path.startsWith("/huzPages")) {
+      setBasePath("/huzPages");
+    }
+  }, []);
 
   if (!hasDemo) {
     return (
@@ -59,7 +68,7 @@ export function DemoPreview({ slug, height = "400px" }: DemoPreviewProps) {
       {/* Demo - use iframe to isolate scroll */}
       <iframe
         key={key}
-        src={`/demos/${slug}`}
+        src={`${basePath}/demos/${slug}`}
         style={{ height, width: "100%", border: "none" }}
         title={`Demo: ${slug}`}
       />
