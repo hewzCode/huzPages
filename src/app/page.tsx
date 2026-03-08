@@ -26,9 +26,12 @@ export default function Home() {
               <Link
                 href="/tutorials"
                 className="inline-flex items-center gap-2 rounded-lg bg-foreground px-6 py-3 text-sm font-medium text-background transition-colors hover:bg-foreground/90"
+                suppressHydrationWarning
               >
                 Browse Gallery
-                <ArrowRight className="h-4 w-4" />
+                <span suppressHydrationWarning>
+                  <ArrowRight className="h-4 w-4" />
+                </span>
               </Link>
 
               <a
@@ -36,10 +39,15 @@ export default function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-lg border border-border px-6 py-3 text-sm font-medium transition-colors hover:bg-muted"
+                suppressHydrationWarning
               >
-                <Github className="h-4 w-4" />
+                <span suppressHydrationWarning>
+                  <Github className="h-4 w-4" />
+                </span>
                 GitHub
-                <ExternalLink className="h-3 w-3" />
+                <span suppressHydrationWarning>
+                  <ExternalLink className="h-3 w-3" />
+                </span>
               </a>
             </div>
           </div>

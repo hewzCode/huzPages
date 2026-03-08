@@ -66,16 +66,6 @@ export function DemoPreview({ slug, height = "400px" }: DemoPreviewProps) {
         title={`Demo: ${slug}`}
       />
 
-      {/* Hint for scroll demos */}
-      <div className="border-t border-border bg-muted/30 px-3 py-2 text-center">
-        <p className="text-xs text-muted-foreground">
-          Scroll inside the preview or{" "}
-          <Link href={`/demos/${slug}`} className="text-accent hover:underline">
-            open fullscreen
-          </Link>{" "}
-          for the best experience
-        </p>
-      </div>
     </div>
   );
 }
