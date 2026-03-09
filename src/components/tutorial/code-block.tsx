@@ -75,11 +75,12 @@ export function CodeBlock({
 
       {/* Code - click to focus, then Ctrl+A selects only code */}
       <div
-        className="overflow-x-auto bg-[#0d1117] focus:outline-none focus:ring-1 focus:ring-accent/50"
+        className="overflow-auto bg-[#0d1117] max-h-[600px] overscroll-contain focus:outline-none focus:ring-1 focus:ring-accent/50"
         tabIndex={0}
         onKeyDown={handleKeyDown}
+        data-lenis-prevent
       >
-        <pre ref={codeRef} className="p-4 text-sm font-mono text-gray-300 whitespace-pre">
+        <pre ref={codeRef} className="p-4 text-sm font-mono text-gray-300 whitespace-pre min-w-fit">
           {code}
         </pre>
       </div>

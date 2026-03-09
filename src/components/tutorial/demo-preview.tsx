@@ -59,13 +59,15 @@ export function DemoPreview({ slug, height = "400px" }: DemoPreviewProps) {
       </div>
 
       {/* Demo - use iframe to isolate scroll */}
-      <iframe
-        key={key}
-        src={`${BASE_PATH}/demos/${slug}`}
-        style={{ height, width: "100%", border: "none" }}
-        title={`Demo: ${slug}`}
-        loading="lazy"
-      />
+      <div className="overscroll-contain" style={{ height }} data-lenis-prevent>
+        <iframe
+          key={key}
+          src={`${BASE_PATH}/demos/${slug}`}
+          style={{ height: "100%", width: "100%", border: "none" }}
+          title={`Demo: ${slug}`}
+          loading="lazy"
+        />
+      </div>
 
     </div>
   );
