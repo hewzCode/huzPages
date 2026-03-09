@@ -38,23 +38,14 @@ function NavSection({ item }: { item: NavItem }) {
         />
       </button>
 
-      <AnimatePresence initial={false}>
-        {isOpen && item.items && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
-          >
-            <div className="ml-4 mt-1 space-y-1 border-l border-border pl-3">
-              {item.items.map((subItem) => (
-                <NavLink key={subItem.title} item={subItem} />
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Simplified: no framer-motion animation to improve scroll performance */}
+      {isOpen && item.items && (
+        <div className="ml-4 mt-1 space-y-1 border-l border-border pl-3">
+          {item.items.map((subItem) => (
+            <NavLink key={subItem.title} item={subItem} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

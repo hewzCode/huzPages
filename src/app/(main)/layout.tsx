@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu } from "lucide-react";
+import Lenis from "lenis";
 import { Header } from "@/components/layout/header";
 import { Sidebar, MobileSidebar } from "@/components/layout/sidebar";
 
@@ -11,6 +12,22 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Smooth scroll for the main layout
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.0,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+    return () => lenis.destroy();
+  }, []);
 
   return (
     <div className="min-h-screen">

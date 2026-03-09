@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, ExternalLink, Github, Play } from "lucide-react";
 import { DemoPreview } from "@/components/tutorial/demo-preview";
-import { CodeTabs } from "@/components/tutorial/code-block";
+import { CodeTabs, CodeBlock } from "@/components/tutorial/code-block";
 import { demoRegistry } from "@/lib/registry";
 import { sidebarNavigation } from "@/config/navigation";
 
@@ -126,13 +126,8 @@ export default async function TutorialPage({ params }: TutorialPageProps) {
         {demoCode ? (
           <CodeTabs files={demoCode} />
         ) : (
-          <div className="overflow-hidden rounded-xl border border-border bg-muted/30">
-            <div className="flex items-center justify-between border-b border-border px-4 py-2">
-              <span className="text-sm font-medium">component.tsx</span>
-            </div>
-            <pre className="overflow-x-auto p-4">
-              <code className="text-sm font-mono text-muted-foreground">
-{`// Demo component for ${title}
+          <CodeBlock
+            code={`// Demo component for ${title}
 // Add your implementation here
 
 export default function ${slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join("")}() {
@@ -142,20 +137,15 @@ export default function ${slug.split("-").map(w => w.charAt(0).toUpperCase() + w
     </div>
   );
 }`}
-              </code>
-            </pre>
-          </div>
+            filename="component.tsx"
+          />
         )}
       </section>
 
       {/* Dependencies */}
       <section>
         <h2 className="mb-4 text-xl font-semibold">Dependencies</h2>
-        <div className="rounded-xl border border-border bg-muted/30 p-4">
-          <code className="text-sm font-mono">
-            npm install framer-motion
-          </code>
-        </div>
+        <CodeBlock code="npm install framer-motion" filename="terminal" language="bash" />
       </section>
     </div>
   );

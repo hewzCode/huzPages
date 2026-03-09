@@ -64,6 +64,7 @@ export function DemoPreview({ slug, height = "400px" }: DemoPreviewProps) {
         src={`${BASE_PATH}/demos/${slug}`}
         style={{ height, width: "100%", border: "none" }}
         title={`Demo: ${slug}`}
+        loading="lazy"
       />
 
     </div>
